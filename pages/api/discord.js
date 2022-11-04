@@ -9,7 +9,7 @@ export default function handler(req, res) {
   return fetch(process.env.DISCORD_WEBHOOK, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json; charset=UTF-8'
     },
     body: JSON.stringify({
       content: req.body.message

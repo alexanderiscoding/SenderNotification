@@ -6,12 +6,41 @@ export default function handler(req, res) {
   if (req.body.message == undefined) {
     return res.status(406).json("Missing Message");
   }
-  return fetch('https://api.telegram.org/bot' + process.env.TELEGRAM_TOKEN + '/sendMessage?chat_id=' + process.env.TELEGRAM_ID + '&text=' + req.body.message)
-  .then(async function (response) {
-    const data = await response.json();
-    res.status(200).json(data);
-  })
-  .catch(function (error) {
-    res.status(500).json(error);
-  });
+  if(process.env.TELEGRAM_DEFAULT){
+    return fetch('https://api.telegram.org/bot' + process.env.TELEGRAM_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: JSON.stringify({
+        chat_id: process.env.TELEGRAM_DEFAULT,
+        text: req.body.message
+      })
+    })
+    .then(async function (response) {
+      const data = await response.json();
+      res.status(200).json(data);
+    })
+    .catch(function (error) {
+      res.status(500).json(error);
+    });
+  }else{
+    return fetch('https://api.telegram.org/bot' + process.env.TELEGRAM_TOKEN + '/sendMessage', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8'
+      },
+      body: JSON.stringify({
+        chat_id: req.body.chatID,
+        text: req.body.message
+      })
+    })
+    .then(async function (response) {
+      const data = await response.json();
+      res.status(200).json(data);
+    })
+    .catch(function (error) {
+      res.status(500).json(error);
+    });
+  }
 }
