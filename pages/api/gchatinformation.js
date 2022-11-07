@@ -36,6 +36,10 @@ export default function handler(req, res) {
     body: JSON.stringify({
       cards: [
         {
+          header: {
+            title: req.body.title,
+            subtitle: req.body.subtitle
+          },
           sections: [
             {
               widgets: informations
