@@ -3,7 +3,7 @@ export default function handler(req, res) {
   if (req.headers.authorization != process.env.TOKEN) {
     return res.status(401).json("Invalid Authentication Credentials");
   }
-  if ([req.body.coduser, req.body.registrationToken, req.body.topic, req.body.change].includes(undefined)) {
+  if ([req.body.coduser, req.body.registrationToken, req.body.topic, req.body.activate].includes(undefined)) {
     return res.status(406).json("Missing Information");
   }
   return fetch(process.env.CLOUD_HOST + '/api/messaging/topic', {
@@ -15,7 +15,7 @@ export default function handler(req, res) {
     body: JSON.stringify({
       registrationTokens: [req.body.registrationToken],
       topic: req.body.topic,
-      change: req.body.change
+      activate: req.body.activate
     })
   }).then(function () {
     return fetch(process.env.CLOUD_HOST + '/api/database/update', {
@@ -29,7 +29,7 @@ export default function handler(req, res) {
         id: req.body.coduser,
         column: {
           topic: {
-            [req.body.topic]: req.body.change
+            [req.body.topic]: req.body.activate
           }
         }
       })
